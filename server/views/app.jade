@@ -1,0 +1,74 @@
+extends layout
+
+block content
+  .container
+    .row-fluid
+      .span12
+        .fb-title
+          h1= title
+          p.path= app.rootDir
+    .row-fluid.common-block
+      .span12
+        .fb-common
+            .title common
+            .options
+              .buildto-block
+                span.status
+                a#fb-build-common.build-btn.btn(href='/build-common?root=#{app.rootDir}') Build
+    .row-fluid
+      .span12
+        - if (app.config.groups)
+          ul.groups.nav.nav-pills
+            li.groups-item
+              a.j-select-group(href='#', title='') none
+            - each group, groupname in app.config.groups
+              li.groups-item
+                a.j-select-group(href='#', title=group.join(","))= groupname
+
+    .row-fluid.fb-pages
+      .span8
+        .pages
+          - each pages, pageName in groups
+            .fb-page
+              ul.versions
+                - each page in pages
+                  li.version
+                    //- input.versionCheck(type='checkbox')
+                    a.version_no(href='/page/#{page.name}@#{page.version}?root=#{app.rootDir}') #{pageName}/#{page.version}
+                    .options
+                      .version-check
+                        input.j-version-checkbox.version-checkbox(type='checkbox',value='#{page.name}/#{page.version}')
+
+      .span4
+
+        .buildto-block
+          .input-prepend.input-append
+            span.add-on
+              i.icon-calendar
+            input#batch-build-timestamp.input-small.timestamp-input(type='text')
+            button#batch-build.btn
+              |Build
+
+          div#batch-build-status.status
+
+
+
+
+    .row-fluid
+      .span8
+
+        form.form-inline.form-page-add(method='post', action=getUrl('/add-page'))
+          fieldset
+            input(type='hidden', value=app.rootDir, name='root')
+            input.input-medium(type='text', name='pagename', title='Name of Your Page')
+            |&nbsp; / &nbsp;
+            input.input-small(type='text', name='version', value='1.0', title='version (eg. 1.0)')
+            |&nbsp;&nbsp;
+            button.j-group-build.btn(type='submit') Add Page
+    #reporter.fixed-reporter
+  script.
+    KISSY.use('page/index', function (S, Page) {
+      Page.init({
+        rootDir: '#{app.rootDir.replace(/\\/g, '\\\\')}'
+      });
+    });

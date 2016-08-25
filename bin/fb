@@ -1,0 +1,97 @@
+#!/usr/bin/env node
+var argv = require('optimist')
+    .alias('t', 'timestamp')
+    .string('t')
+    .string('timestamp')
+
+    .alias('T', 'type')
+    .string('type')
+
+    .string('_')
+
+    .alias('d', 'debug')
+    .alias('w', 'watch')
+	.argv;
+
+var util = require('util');
+var ErrorHelper = require('../lib/error-helper');
+
+
+
+var cwd = process.cwd();
+
+var commands = require('../lib/commands');
+
+function done(err, message) {
+	if(err) {
+		if (typeof err === 'string') {
+			util.debug('Error: %s', err.message);
+		} else if (err.message) {
+			ErrorHelper.printError(err);
+		}
+		
+		console.log('fail');
+		process.exit(1);
+		return;
+	}
+	
+	if (message) {
+		console.log(message);
+	}
+    process.exit(0);
+}
+
+//默认显示帮助
+var command = 'help';
+
+
+if (argv._[0]) {
+	switch(argv._[0]) {
+		case 'init':
+			command = 'init';
+			break;
+
+		case 'update':
+			command = 'update';
+			break;
+
+		case 'a':
+		case 'add':
+			command = 'addPage';
+			break;
+
+		case 'v':
+		case 'ver':
+		case 'version':
+			command = 'version';
+			break;
+
+		case 'b':
+		case 'build':
+			command = 'build';
+			break;
+		case 'group':
+		case 'g':
+			command = 'group';
+			break;
+		case 'help':
+			command = 'help';
+			break;
+		case 'web':
+			command = 'web';
+			break;
+        case 'analyze':
+        case 'fenxi':
+        case 'st':
+        case 'fx':
+            command = 'analyze';
+            break;
+	}
+}
+
+if (commands && commands[command]) {
+	commands[command]({
+		argv: argv,
+		cwd: cwd
+	}, done);
+}

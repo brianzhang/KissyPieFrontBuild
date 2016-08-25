@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  .container
+    .row
+      .span12
+        .ki-modal
+          .help-block
+            p 在命令行进入你的应用， 执行 <code>ki web</code> 可直接打开此应用的管理界面。
+          div#app-history.app-history
+  script.
+    KISSY.use('page/index');

@@ -1,0 +1,14 @@
+{
+    "inputCharset": "utf8",
+    "outputCharset": "utf8",
+    "concat": {
+        "concat.js": [
+            "mods/mod1.js",
+            "mods/mod2.js"
+        ],
+        "concat.css": [
+            "mods/a.css",
+            "mods/b.css"
+        ]
+    }
+}
